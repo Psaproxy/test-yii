@@ -53,6 +53,8 @@ class OrderComponent extends BaseComponent
             'notStatus' => Order::STATUS_APPROVED,
         ])->queryScalar();
 
+        // Уникальное исключение, что бы его можно было целенаправленно обработать.
+        // Например, для сообщения клиенту.
         if ($hasApprovedOrder) {
             throw new ApprovedOrderAlreadyExistsException($userId);
         }
