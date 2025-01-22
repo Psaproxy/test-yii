@@ -1,4 +1,4 @@
-# Установка, настройка и запуск
+# Установка, настройка, запуск
 
 Изменить входящие порты в `/compose.override.yml`, те, что до двоеточия.
 
@@ -6,7 +6,7 @@
 
 Выполнить из корневой директории приложения:
 ```
-make build && make install && make make caddy-ssl-ca-install-browsers && make restart
+make build && make install && make caddy-ssl-ca-install-browsers && make restart
 ```
 
 # Подключение к БД
