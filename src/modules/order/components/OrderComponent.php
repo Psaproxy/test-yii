@@ -60,11 +60,10 @@ class OrderComponent extends BaseComponent
         }
 
         $order = new Order($userId, $amount, $days);
+        if (!$order->getErrors()) $order->save();
         if ($order->getErrors()) {
             throw new ModelValidationErrorsException($order->getErrors());
         }
-
-        $order->save();
 
         return $order->id();
     }
@@ -133,12 +132,11 @@ class OrderComponent extends BaseComponent
                 }
 
                 if ($order->changeStatus($statusNew)) {
+                    if (!$order->getErrors()) $order->save();
                     if ($order->getErrors()) {
                         $exception = new ModelValidationErrorsException($order->getErrors());
                         \Yii::error($exception->getMessage());
                     }
-
-                    $order->save();
                 }
 
                 $usersIdsWithApproved[$order->userId()] = true;
