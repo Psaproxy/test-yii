@@ -133,11 +133,12 @@ class OrderComponent extends BaseComponent
                 }
 
                 if ($order->changeStatus($statusNew)) {
-                    $order->save();
                     if ($order->getErrors()) {
                         $exception = new ModelValidationErrorsException($order->getErrors());
                         \Yii::error($exception->getMessage());
                     }
+
+                    $order->save();
                 }
 
                 $usersIdsWithApproved[$order->userId()] = true;
