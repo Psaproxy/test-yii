@@ -42,7 +42,7 @@ class OrderComponent extends BaseComponent
         // А проверка конкретных сценариев для данного пользователя должна быть здесь.
 
         // todo Вынести запрос в репозиторий.
-        $hasApprovedOrder = $this->db->createCommand('
+        $hasApprovedOrder = (bool)$this->db->createCommand('
                 select count(*) 
                 from orders 
                 where user_id = :userId 
