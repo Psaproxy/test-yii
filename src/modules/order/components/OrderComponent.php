@@ -60,11 +60,11 @@ class OrderComponent extends BaseComponent
         }
 
         $order = new Order($userId, $amount, $days);
-
-        $order->save();
         if ($order->getErrors()) {
             throw new ModelValidationErrorsException($order->getErrors());
         }
+
+        $order->save();
 
         return $order->id();
     }
