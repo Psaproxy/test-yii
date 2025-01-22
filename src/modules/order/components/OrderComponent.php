@@ -6,6 +6,7 @@ namespace app\modules\order\components;
 
 use app\components\BaseComponent;
 use app\exceptions\ModelValidationErrorsException;
+use app\modules\order\exceptions\ApprovedOrderAlreadyExistsException;
 use app\modules\order\models\Order;
 use yii\db\Exception;
 
@@ -19,6 +20,7 @@ class OrderComponent extends BaseComponent
     }
 
     /**
+     * @throws ApprovedOrderAlreadyExistsException
      * @throws Exception
      */
     public function add(
@@ -35,6 +37,22 @@ class OrderComponent extends BaseComponent
 
         // Правила валидации $amount и $term в модели.
         // А проверка конкретных сценариев для данного пользователя должна быть здесь.
+
+        // todo Вынести запрос в репозиторий.
+        $hasApprovedOrder = \Yii::$app->db->createCommand('
+                select count(*) 
+                from orders 
+                where user_id = :userId 
+                  and status = :notStatus
+                limit 1
+            ')->bindValues([
+            'userId' => $userId,
+            'notStatus' => Order::STATUS_APPROVED,
+        ])->queryScalar();
+
+        if ($hasApprovedOrder) {
+            throw new ApprovedOrderAlreadyExistsException($userId);
+        }
 
         $order = new Order($userId, $amount, $days);
 
@@ -58,6 +76,7 @@ class OrderComponent extends BaseComponent
             \Yii::$app->db->beginTransaction();
 
             // Отклонение всех заявок пользователя, если есть 1 одобренная.
+            // todo Вынести запрос в репозиторий.
             \Yii::$app->db->createCommand('
                 update orders 
                 set status = :statusNew
@@ -76,6 +95,7 @@ class OrderComponent extends BaseComponent
             // Выборка не обработанных заявок, без заявок пользователей с одобрением.
             // Выбранные заявки блокируются, выборка только не заблокированных, без ожидания освобождения.
             // Авто разблокировка после завершения транзакции.
+            // todo Вынести запрос в репозиторий.
             $orders = \Yii::$app->db->createCommand('
                 select *
                 from orders o

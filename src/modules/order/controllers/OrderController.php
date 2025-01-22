@@ -6,6 +6,7 @@ namespace app\modules\order\controllers;
 
 use app\controllers\BaseController;
 use app\modules\order\components\OrderComponent;
+use app\modules\order\exceptions\ApprovedOrderAlreadyExistsException;
 use yii\base\InvalidConfigException;
 
 class OrderController extends BaseController
@@ -37,6 +38,8 @@ class OrderController extends BaseController
                 $args['amount'],
                 $args['term'],
             );
+        } catch (ApprovedOrderAlreadyExistsException ) {
+            //
         } catch (\Throwable $exception) {
             \Yii::error($exception->getMessage());
         }
