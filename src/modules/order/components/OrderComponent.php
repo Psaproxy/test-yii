@@ -12,10 +12,13 @@ use yii\db\Exception;
 
 class OrderComponent extends BaseComponent
 {
+    private \yii\db\Connection $db;
+
     public function __construct($config = [])
     {
         parent::__construct($config);
 
+        $this->db = \Yii::$app->db;``
         //$this->userComponent = \Yii::$app->getModule('user')->user;
     }
 
@@ -30,7 +33,7 @@ class OrderComponent extends BaseComponent
     ): int
     {
         /**
-         * Проверка, что существует активный пользователь.
+         * Проверка, что существует действующий пользователь.
          * @throws NotFounActualUserException
          */
         //$userId = $this->userComponent->mustActualExist($userId);
@@ -39,7 +42,7 @@ class OrderComponent extends BaseComponent
         // А проверка конкретных сценариев для данного пользователя должна быть здесь.
 
         // todo Вынести запрос в репозиторий.
-        $hasApprovedOrder = \Yii::$app->db->createCommand('
+        $hasApprovedOrder = $this->db->createCommand('
                 select count(*) 
                 from orders 
                 where user_id = :userId 
@@ -73,11 +76,11 @@ class OrderComponent extends BaseComponent
         try {
             $limitOrders = max(1, min(100, $limitOrders));
 
-            \Yii::$app->db->beginTransaction();
+            $this->db->beginTransaction();
 
             // Отклонение всех заявок пользователя, если есть 1 одобренная.
             // todo Вынести запрос в репозиторий.
-            \Yii::$app->db->createCommand('
+            $this->db->createCommand('
                 update orders 
                 set status = :statusNew
                 where user_id in (
@@ -96,7 +99,7 @@ class OrderComponent extends BaseComponent
             // Выбранные заявки блокируются, выборка только не заблокированных, без ожидания освобождения.
             // Авто разблокировка после завершения транзакции.
             // todo Вынести запрос в репозиторий.
-            $orders = \Yii::$app->db->createCommand('
+            $orders = $this->db->createCommand('
                 select *
                 from orders o
                 where o.status = :inStatus
@@ -138,10 +141,10 @@ class OrderComponent extends BaseComponent
                 $usersIdsWithApproved[$order->userId()] = true;
             }
 
-            \Yii::$app->db->getTransaction()?->commit();
+            $this->db->getTransaction()?->commit();
 
         } catch (\Throwable $exception) {
-            \Yii::$app->db->getTransaction()?->rollBack();
+            $this->db->getTransaction()?->rollBack();
             throw $exception;
         }
     }
