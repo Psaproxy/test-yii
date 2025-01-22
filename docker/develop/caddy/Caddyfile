@@ -1,0 +1,6 @@
+{$SERVER_NAME:localhost} {
+    tls internal
+    root * /app/src/web
+    php_fastcgi fpm:9000
+    file_server
+}

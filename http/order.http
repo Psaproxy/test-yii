@@ -1,0 +1,10 @@
+### Создание заявки
+POST {{serverUrl}}/requests
+Accept: application/json
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "amount": 3000,
+  "term": 30
+}
