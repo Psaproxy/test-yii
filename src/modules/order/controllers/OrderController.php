@@ -47,7 +47,7 @@ class OrderController extends BaseController
         if ($orderId) {
             $this->response->statusCode = 201;
             return [
-                'result' => $orderId,
+                'result' => true,
                 'id' => $orderId,
             ];
         }
