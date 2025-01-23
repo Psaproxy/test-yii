@@ -18,10 +18,12 @@ make build && make install && make caddy-ssl-ca-install-browsers && make restart
 # Использование
 
 ### Добавление заявок
-Выполнить запрос `/http/order.http`
+Выполнить запрос из `/http/order.http`
 
 ### Запуск обработки заявок
-Выполнить в браузере `https://test-yii2.local:446/processor?delay=20&limit=1`
+Выполнить запрос из `/http/order.http`
+
+Или выполнить в браузере `https://test-yii2.local:446/processor?delay=20&limit=1`
 
 # Реализация
 

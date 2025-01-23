@@ -68,7 +68,7 @@ class OrderController extends BaseController
             $delay = (int)($args['delay'] ?? 0);
             $delay = max(0, $delay);
 
-            $limit = (int)($args['limit'] ?? 1);
+            $limit = (int)($args['limit'] ?? 100);
 
             if ($delay) sleep($delay);
 

@@ -4,7 +4,17 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "user_id": 1,
+  "user_id": 22,
   "amount": 3000,
   "term": 30
 }
+
+### Обработка всех заявок
+GET {{serverUrl}}/processor?delay=0&limit=1
+Accept: application/json
+Content-Type: application/json
+
+### Обработка всех заявок
+GET {{serverUrl}}/processor?delay=0
+Accept: application/json
+Content-Type: application/json
