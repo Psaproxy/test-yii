@@ -146,6 +146,11 @@ class Order extends \app\models\BaseModel
         return (new \DateTimeImmutable())->setTimestamp($this->updated_at);
     }
 
+    public function isApproved(): bool
+    {
+        return self::STATUS_APPROVED === $this->status;
+    }
+
     private function validateStatus(string $statusNew, ?string $statusPre): void
     {
         $statusPreAllowed = self::STATUS_PREV_ALLOWED[$statusNew] ?? '';

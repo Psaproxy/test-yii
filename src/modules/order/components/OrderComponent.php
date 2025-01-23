@@ -100,7 +100,7 @@ class OrderComponent extends BaseComponent
                     }
                 }
 
-                if (Order::STATUS_APPROVED === $statusNew) {
+                if ($order->isApproved()) {
                     $usersIdsWithApproved[$order->userId()] = true;
                 }
             }
